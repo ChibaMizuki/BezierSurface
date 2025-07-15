@@ -2,7 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	control_n = 4; control_m = 4;
+	control_n = 6; 
+	control_m = 6;
+	grid.resize(control_n, vector<ofVec3f>(control_m));
 
 	ofVec3f offset(((control_n - 1) * 100) / 2, ((control_m - 1) * 100) / 2, 150);
 	//êßå‰ì_
@@ -43,12 +45,12 @@ int ofApp::binomialcoefficient(int n, int i) {
 }
 
 //--------------------------------------------------------------
-ofVec3f ofApp::Bezier(ofVec3f p[4][4], float u, float v) {
+ofVec3f ofApp::Bezier(float u, float v) {
 	ofVec3f point(0, 0, 0);
 
 	for (int i = 0; i < control_n; i++) {
 		for (int j = 0; j < control_m; j++) {
-			point += p[i][j] * Bernstein(control_n - 1, i, u)* Bernstein(control_m - 1, j, v);
+			point += grid[i][j] * Bernstein(control_n - 1, i, u)* Bernstein(control_m - 1, j, v);
 		}
 	}
 
@@ -63,17 +65,18 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	camera.begin();
-	//ofDrawAxis(50);
+	ofDrawAxis(50);
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if ((i == 0 && j == 0) || (i == 3 && j == 0) || (i == 0 && j == 3) || (i == 3 && j == 3)) {
+	for (int i = 0; i < control_n; i++) {
+		for (int j = 0; j < control_m; j++) {
+			if ((i == 0 && j == 0) || (i == control_n - 1 && j == 0) || (i == 0 && j == control_m - 1)
+				|| (i == control_n - 1 && j == control_m - 1)) {
 				ofSetColor(ofColor::blue);
 			}
 			else {
 				ofSetColor(ofColor::white);
 			}
-			ofDrawSphere(grid[i][j], 5);
+			ofDrawSphere(grid[i][j], 2);
 		}
 	}
 
@@ -85,10 +88,10 @@ void ofApp::draw(){
 			float v0 = v;
 			float v1 = v + interval;
 
-			ofVec3f p00 = Bezier(grid, u0, v0);
-			ofVec3f p10 = Bezier(grid, u1, v0);
-			ofVec3f p01 = Bezier(grid, u0, v1);
-			ofVec3f p11 = Bezier(grid, u1, v1);
+			ofVec3f p00 = Bezier(u0, v0);
+			ofVec3f p10 = Bezier(u1, v0);
+			ofVec3f p01 = Bezier(u0, v1);
+			ofVec3f p11 = Bezier(u1, v1);
 
 			ofDrawLine(p00, p10);
 			ofDrawLine(p00, p01);

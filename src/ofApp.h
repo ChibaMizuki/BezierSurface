@@ -5,7 +5,7 @@
 class ofApp : public ofBaseApp{
 	private:
 		//§Œä“_i4 x 4j
-		ofVec3f grid[4][4];
+		vector<vector<ofVec3f>> grid;
 		//u, v‚ÌŠÔŠu
 		float interval;
 		int control_n, control_m;
@@ -34,6 +34,6 @@ class ofApp : public ofBaseApp{
 		//Bernstein‘½€®
 		float Bernstein(int, int, float);
 		int binomialcoefficient(int, int);
-		ofVec3f Bezier(ofVec3f p[4][4], float, float);
+		ofVec3f Bezier(float, float);
 		
 };
