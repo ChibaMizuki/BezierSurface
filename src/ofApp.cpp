@@ -2,26 +2,24 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	control_n = 6; 
-	control_m = 6;
+	// 制御点の個数
+	control_n = 5; 
+	control_m = 5;
 	grid.resize(control_n, vector<ofVec3f>(control_m));
+	// メッシュの幅
+	interval = 0.05;
 
 	ofVec3f offset(((control_n - 1) * 100) / 2, ((control_m - 1) * 100) / 2, 150);
-	//制御点
+	//制御点の設定
 	for (int i = 0; i < control_n; i++) {
 		for (int j = 0; j < control_m; j++) {
 			grid[i][j] = ofVec3f(i * 100, j * 100, ofRandom(0, 300)) - offset;
 		}
 	}
 
-	interval = 0.01;
 	mesh.setMode(OF_PRIMITIVE_TRIANGLES);
 	ofSetBackgroundColor(ofColor::black);
 	ofEnableDepthTest();
-
-	/*ofVec3f center(150, 150, 150);
-	camera.setPosition(center + ofVec3f(0, 0, 600));
-	camera.lookAt(center);*/
 }
 
 //--------------------------------------------------------------
@@ -98,16 +96,8 @@ void ofApp::draw(){
 			ofDrawLine(p11, p10);
 			ofDrawLine(p11, p01);
 
-			/*mesh.addVertex(p00);
-			mesh.addVertex(p10);
-			mesh.addVertex(p01);
-			mesh.addVertex(p11);*/
-
 		}
 	}
-	
-	//mesh.drawWireframe();
-
 	camera.end();
 }
 
