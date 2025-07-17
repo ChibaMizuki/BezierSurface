@@ -11,7 +11,7 @@ class ofApp : public ofBaseApp{
 		int control_n, control_m;
 
 		ofMesh mesh;
-
+		ofImage image;
 		ofEasyCam camera;
 
 	public:

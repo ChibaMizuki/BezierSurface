@@ -8,6 +8,7 @@ void ofApp::setup(){
 	grid.resize(control_n, vector<ofVec3f>(control_m));
 	// メッシュの幅
 	interval = 0.05;
+	image.load("gk.jpg");
 
 	ofVec3f offset(((control_n - 1) * 100) / 2, ((control_m - 1) * 100) / 2, 150);
 	//制御点の設定
@@ -18,6 +19,7 @@ void ofApp::setup(){
 	}
 
 	mesh.setMode(OF_PRIMITIVE_TRIANGLES);
+	ofEnableNormalizedTexCoords();
 	ofSetBackgroundColor(ofColor::black);
 	ofEnableDepthTest();
 }
@@ -78,7 +80,8 @@ void ofApp::draw(){
 		}
 	}
 
-	ofSetColor(ofColor::green);
+	//ofSetColor(ofColor::green);
+	int i = 0;
 	for (float u = 0.0; u < 1.0; u += interval) {
 		float u0 = u;
 		float u1 = u + interval;
@@ -91,13 +94,38 @@ void ofApp::draw(){
 			ofVec3f p01 = Bezier(u0, v1);
 			ofVec3f p11 = Bezier(u1, v1);
 
-			ofDrawLine(p00, p10);
+			/*ofDrawLine(p00, p10);
 			ofDrawLine(p00, p01);
 			ofDrawLine(p11, p10);
-			ofDrawLine(p11, p01);
+			ofDrawLine(p11, p01);*/
 
+			/*
+			p01・-・p11
+			    | |
+			p00・-・p10
+			*/
+
+			mesh.addVertex(ofVec3f(p00));
+			mesh.addVertex(ofVec3f(p10));
+			mesh.addVertex(ofVec3f(p01));
+			mesh.addVertex(ofVec3f(p11));
+
+			mesh.addIndex(i + 0); mesh.addIndex(i + 1); mesh.addIndex(i + 2);
+			mesh.addIndex(i + 2); mesh.addIndex(i + 1); mesh.addIndex(i + 3);
+
+			// 上下反転するのを修正
+			mesh.addTexCoord(ofVec2f(u0, 1.0 - v0));
+			mesh.addTexCoord(ofVec2f(u1, 1.0 - v0));
+			mesh.addTexCoord(ofVec2f(u0, 1.0 - v1));
+			mesh.addTexCoord(ofVec2f(u1, 1.0 - v1));
+			i += 4;
 		}
 	}
+
+	ofSetColor(255);
+	image.getTexture().bind();
+	mesh.draw();
+	image.getTexture().unbind();
 	camera.end();
 }
 
